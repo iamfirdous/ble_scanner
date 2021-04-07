@@ -10,5 +10,4 @@ This app is developed in Flutter, and designed in Figma.
 
 ## ScreenRecord of the App
 
-![ble_scanner_screenrecord](https://user-images.githubusercontent.com/33775648/113840870-c3cc9380-97ae-11eb-9c20-16c5e1647601.gif)
-
+<img src="https://user-images.githubusercontent.com/33775648/113840870-c3cc9380-97ae-11eb-9c20-16c5e1647601.gif" width="260" />

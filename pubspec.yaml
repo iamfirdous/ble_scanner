@@ -1,0 +1,39 @@
+name: bt_scanner
+description: A new Flutter project.
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.12.2 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.2
+  flutter_blue: ^0.8.0
+  flutter_launcher_icons: ^0.9.0
+  location: ^4.1.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter_icons:
+  ios: true
+  android: true
+  image_path_ios: "assets/launcher/app-icon.png"
+  image_path_android: "assets/launcher/app-icon.png"
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+  fonts:
+    - family: Fredoka
+      fonts:
+        - asset: assets/fonts/FredokaOne-Regular.ttf
+    - family: Open Sans
+      fonts:
+        - asset: assets/fonts/OpenSans-Regular.ttf

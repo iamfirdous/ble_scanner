@@ -26,7 +26,12 @@ class CustomButton extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (text != null) Text(text!, style: Theme.of(context).textTheme.button),
+              if (text != null)
+                Flexible(
+                  child: Text(text!,
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.button),
+                ),
               if (text != null && icon != null) const SizedBox(width: 12.0),
               if (icon != null) Image.asset(icon!),
             ],

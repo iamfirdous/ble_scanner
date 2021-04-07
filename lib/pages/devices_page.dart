@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bt_scanner/constants.dart';
 import 'package:bt_scanner/pages/detail_page.dart';
 import 'package:bt_scanner/widgets/custom_button.dart';
@@ -17,6 +19,7 @@ class _DevicesPageState extends State<DevicesPage> {
   Location location = new Location();
   bool _serviceEnabled = false;
   bool _permissionGranted = false;
+  BluetoothState blState = BluetoothState.unknown;
 
   Future<bool> _requestLocationPermission() async {
     PermissionStatus permStatus = await location.hasPermission();
@@ -57,6 +60,7 @@ class _DevicesPageState extends State<DevicesPage> {
   void initState() {
     super.initState();
     _requestLocationPermission();
+    FlutterBlue.instance.state.listen((state) => setState(() => blState = state));
   }
 
   @override
@@ -75,55 +79,41 @@ class _DevicesPageState extends State<DevicesPage> {
           image: DecorationImage(image: AssetImage(Images.bg), fit: BoxFit.cover),
         ),
         child: SafeArea(
-          child: Stack(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              Row(
                 children: [
-                  Row(
-                    children: [
-                      Hero(
-                        tag: Images.logo,
-                        child: Image.asset(Images.logo, height: 164.0),
-                        transitionOnUserGestures: true,
-                      ),
-                      Flexible(
-                        child: Text(
-                          Texts.devices,
-                          style: Theme.of(context).textTheme.bodyText1,
-                        ),
-                      ),
-                    ],
+                  Hero(
+                    tag: Images.logo,
+                    child: Image.asset(Images.logo, height: 164.0),
+                    transitionOnUserGestures: true,
                   ),
-                  StreamBuilder<BluetoothState>(
-                    stream: FlutterBlue.instance.state,
-                    initialData: BluetoothState.unknown,
-                    builder: (c, snapshot) {
-                      final state = snapshot.data;
-                      if (state == BluetoothState.on) {
-                        return ListDevices();
-                      }
-                      return Container(
-                        height: 200.0,
-                        child: Center(
-                          child: Text(
-                            state == BluetoothState.turningOn
-                                ? 'Turning on'
-                                : Texts.turned_off,
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme.bodyText1,
-                          ),
-                        ),
-                      );
-                    },
+                  Flexible(
+                    child: Text(
+                      Texts.devices,
+                      style: Theme.of(context).textTheme.bodyText1,
+                    ),
                   ),
                 ],
               ),
-              Center(
+              if (blState == BluetoothState.on) ...[ListDevices()],
+              SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    if (blState != BluetoothState.on) ...[
+                      Text(
+                        blState == BluetoothState.turningOn
+                            ? 'Turning on'
+                            : Texts.turned_off,
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.bodyText1,
+                      ),
+                    ],
                     if (!_serviceEnabled) ...[
+                      const SizedBox(height: 24.0),
                       Text(
                         'Location is not enabled.',
                         textAlign: TextAlign.center,
@@ -140,8 +130,8 @@ class _DevicesPageState extends State<DevicesPage> {
                         text: 'Enable location',
                       ),
                     ],
-                    const SizedBox(height: 24.0),
-                    if (!_permissionGranted) ...[
+                    if (!_permissionGranted && !Platform.isIOS) ...[
+                      const SizedBox(height: 24.0),
                       Text(
                         'Location permission denied.',
                         textAlign: TextAlign.center,
@@ -160,7 +150,7 @@ class _DevicesPageState extends State<DevicesPage> {
                     ],
                   ],
                 ),
-              ),
+              )
             ],
           ),
         ),
